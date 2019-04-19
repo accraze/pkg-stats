@@ -1,0 +1,5 @@
+Contents-*
+env
+*.sw[po]
+*.py[cod]
+
