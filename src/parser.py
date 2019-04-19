@@ -11,6 +11,7 @@ class Parser:
     This will also print out the top-n results
     based by number of files.
     """
+
     def __init__(self):
         self.pkg_files = {}
 
@@ -32,15 +33,16 @@ class Parser:
         """Parse a contents line and update pkg files list."""
         # split on whitespace and remove newline
         vals = re.split(r'\s+', line[:-1])
-        pkg_name = vals[-1]  # pkg_name is in last column
-        self._update_pkg_files(pkg_name)
+        pkg_names = vals[-1]  # pkg_name is in last column
+        self._update_pkg_files(pkg_names)
 
-    def _update_pkg_files(self, pkg_name):
-        """Increment or initialize num file count for a pkg."""
-        if not self.pkg_files.get(pkg_name):
-            self.pkg_files[pkg_name] = 1
-        else:
-            self.pkg_files[pkg_name] += 1
+    def _update_pkg_files(self, pkg_names):
+        """Increment or initialize num file count for all pkgs."""
+        for pkg_name in pkg_names.split(','):
+            if not self.pkg_files.get(pkg_name):
+                self.pkg_files[pkg_name] = 1
+            else:
+                self.pkg_files[pkg_name] += 1
 
     def _get_top_results(self):
         """Retrieve top-n pkgs. Returns list of tuples."""

@@ -20,6 +20,8 @@ class TestParser(unittest.TestCase):
         self.assertEquals(self.p.pkg_files, {'foo': 1})
         self.p._update_pkg_files('foo')
         self.assertEquals(self.p.pkg_files, {'foo': 2})
+        self.p._update_pkg_files('bar,baz')
+        self.assertEquals(self.p.pkg_files, {'foo': 2, 'bar': 1, 'baz': 1})
 
     def test_get_top_results(self):
         pkg_files = {'foo': 123, 'bar': 456, 'baz': 789, 'zab': 333, 'rab': 212,
