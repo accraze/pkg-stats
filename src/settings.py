@@ -5,3 +5,5 @@ ARCH_TYPES = ['amd64', 'arm64', 'armel', 'armhf', 'i386',
 
 MIRROR_DOMAIN = os.environ.get(
     'MIRROR_DOMAIN', 'http://ftp.uk.debian.org/debian/dists/stable/main/')
+
+TOP_N = os.environ.get('TOP_N', 10)

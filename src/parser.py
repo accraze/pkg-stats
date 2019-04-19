@@ -1,14 +1,23 @@
 import re
 from collections import Counter
 
+from src.settings import TOP_N
+from src.utils import _print_column_keys, _print_header, _print_row
+
 
 class Parser:
 
+    """Parse a contents file stored on disk.
+    This will also print out the top-n results
+    based by number of files.
+    """
     pkg_files = {}
 
     def parse_contents_file(self, filepath):
+        """Parse a file and print out the results."""
         self._parse(filepath)
-        self._print_results()
+        top_results = self._get_top_results()
+        self._print_results(top_results)
 
     def _parse(self, filepath):
         """Read contents file line by line."""
@@ -20,30 +29,26 @@ class Parser:
 
     def _parse_line(self, line):
         """Parse a contents line and update pkg files list."""
+        # split on whitespace and remove newline
         vals = re.split(r'\s+', line[:-1])
-        pkg = vals[-1]
-        if not self.pkg_files.get(pkg):
-            self.pkg_files[pkg] = 1
+        pkg_name = vals[-1]  # pkg_name is in last column
+        self._update_pkg_files(pkg_name)
+
+    def _update_pkg_files(self, pkg_name):
+        """Increment or initialize num file count for a pkg."""
+        if not self.pkg_files.get(pkg_name):
+            self.pkg_files[pkg_name] = 1
         else:
-            self.pkg_files[pkg] += 1
+            self.pkg_files[pkg_name] += 1
 
     def _get_top_results(self):
-        """Retrieve top 10 pkgs. Returns list of tuples."""
-        return Counter(self.pkg_files).most_common(10)
+        """Retrieve top-n pkgs. Returns list of tuples."""
+        return Counter(self.pkg_files).most_common(TOP_N)
 
-    def _print_results(self):
+    def _print_results(self, results):
         """Display the top pkg names ordered by number of files."""
-        self._print_header()
-        top_results = self._get_top_results()
-        print('   {:<20} \t {: <20}'.format('pkg_name', 'num_files'))
-        for idx, result in enumerate(top_results):
-            print('{}. {:<20} \t {: <20}'.format(idx+1, result[0], result[1]))
-
+        _print_header(self.fname)
+        _print_column_keys()
+        for idx, result in enumerate(results):
+            _print_row(idx, result)
         print('\n')
-
-    def _print_header(self):
-        bumper = ''.join(['*' for x in range(42)])
-        print('\n' + bumper)
-        print('Top 10 Packages for {}'.format(self.fname))
-        print(bumper)
-
