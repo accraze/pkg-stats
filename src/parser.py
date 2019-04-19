@@ -11,7 +11,8 @@ class Parser:
     This will also print out the top-n results
     based by number of files.
     """
-    pkg_files = {}
+    def __init__(self):
+        self.pkg_files = {}
 
     def parse_contents_file(self, filepath):
         """Parse a file and print out the results."""
